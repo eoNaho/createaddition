@@ -233,7 +233,7 @@
 	"createaddition.ponder.rolling_mill.text_3": "Cliquez avec le bouton droit sur le moulin pour récupérer manuellement les éléments de sortie",
 
 	"createaddition.ponder.automated_rolling_mill.header": "Automatisation du laminoir",
-	"createaddition.ponder.automated_rolling_mill.text_1": "Le laminoir peut être automatisé à l'aide d'une bande et de deux entonnoirs",
+	"createaddition.ponder.automated_rolling_mill.text_1": "Le laminoir peut peut être automatisé en le plaçant entre deux courroies",
 	"createaddition.ponder.automated_rolling_mill.text_2": "Entonnoir d'entrée",
 	"createaddition.ponder.automated_rolling_mill.text_3": "Entonnoir de sortie",
 

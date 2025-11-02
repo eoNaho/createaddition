@@ -1,5 +1,5 @@
 {
-	"render_type": "minecraft:cutout",
+	"credit": "Made with Blockbench",
 	"textures": {
 		"1": "createaddition:entity/liquid_hat",
 		"2": "createaddition:entity/soda_can",

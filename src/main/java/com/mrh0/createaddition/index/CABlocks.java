@@ -192,12 +192,12 @@ public class CABlocks {
             .transform(customItemModel())
             .register();
 
-    public static final BlockEntry<Block> ELECTRUM_BLOCK = CreateAddition.REGISTRATE.block("electrum_block", Block::new)
+    /*public static final BlockEntry<Block> ELECTRUM_BLOCK = CreateAddition.REGISTRATE.block("electrum_block", Block::new)
             .initialProperties(() -> Blocks.GOLD_BLOCK)
             .properties(p -> p.mapColor(MapColor.TERRACOTTA_YELLOW))
             .item()
             .transform(customItemModel())
-            .register();
+            .register();*/
 
     public static final BlockEntry<DigitalAdapterBlock> DIGITAL_ADAPTER = CreateAddition.REGISTRATE.block("digital_adapter",  DigitalAdapterBlock::new)
             .initialProperties(SharedProperties::softMetal)

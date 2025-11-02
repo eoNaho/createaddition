@@ -17,21 +17,23 @@
 	"createaddition.tooltip.energy.passive": "Passive",
 	"createaddition.tooltip.energy.none": "None",
 
-	"createaddition.tooltip.liquid_burning.info": "Liquid Blaze Burner Info:",
-	"createaddition.tooltip.liquid_burning.time_remaining": "Burn Time Remaining:",
-
-	"createaddition.tooltip.charging.info": "Tesla Coil Info:",
-	"createaddition.tooltip.charging.time_remaining": "Charge Time Remaining:",
-
-	"createaddition.tooltip.alternator.info": "Alternator Info:",
 	"createaddition.tooltip.accumulator.info": "Accumulator Info:",
 	"createaddition.tooltip.relay.info": "Relay Info:",
 	"createaddition.tooltip.connector.info": "Connector Info:",
+	"createaddition.tooltip.tesla_coil.info": "Tesla Coil Info:",
 
 	"createaddition.recipe.rolling": "Rolling",
+	"emi.category.createaddition.rolling": "Rolling",
 	"createaddition.recipe.rolling.sequence": "Rolling in Mill",
+
 	"createaddition.recipe.charging": "Charging",
+	"emi.category.createaddition.charging": "Charging",
+	"createaddition.recipe.charging.sequence_0": "Charge ",
+	"createaddition.recipe.charging.sequence_1": "at a Tesla Coil",
+
 	"createaddition.recipe.liquid_burning": "Liquid Burning",
+	"emi.category.createaddition.liquid_burning": "Liquid Burning",
+
 
 	"createaddition.recipe.liquid_burning.burn_time": "Burn Time",
 
@@ -222,8 +224,6 @@
 
 	"block.createaddition.chocolate_cake": "Chocolate Cake",
 	"block.createaddition.honey_cake": "Honey Cake",
-
-	"block.createaddition.electrum_block": "Electrum Block",
 
 	"block.createaddition.biomass_pellet_block": "Biomass Pallet",
 
