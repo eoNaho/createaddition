@@ -1,7 +1,7 @@
 package com.mrh0.createaddition.index;
 
 import com.simibubi.create.Create;
-import com.simibubi.create.content.equipment.potatoCannon.PotatoCannonProjectileType;
+import com.simibubi.create.api.equipment.potatoCannon.PotatoCannonProjectileType;
 
 public class CAPotatoCannonProjectiles {
 	
@@ -13,8 +13,8 @@ public class CAPotatoCannonProjectiles {
 			.velocity(1.1f)
 			.renderTumbling()
 			.sticky()
-			.soundPitch(1.0f)
-			.registerAndAssign(CABlocks.CHOCOLATE_CAKE.get()),
+			.soundPitch(1.0f).build(),
+			//.registerAndAssign(CABlocks.CHOCOLATE_CAKE.get()),
 		HONEY_CAKE = create("honey_cake")
 			.damage(8)
 			.reloadTicks(15)
@@ -22,14 +22,14 @@ public class CAPotatoCannonProjectiles {
 			.velocity(1.1f)
 			.renderTumbling()
 			.sticky()
-			.soundPitch(1.0f)
-			.registerAndAssign(CABlocks.HONEY_CAKE.get());
+			.soundPitch(1.0f).build();
+			//.registerAndAssign(CABlocks.HONEY_CAKE.get());
 	
 	public static void register() {
 		
 	}
 	
 	private static PotatoCannonProjectileType.Builder create(String name) {
-		return new PotatoCannonProjectileType.Builder(Create.asResource(name));
+		return new PotatoCannonProjectileType.Builder();
 	}
 }

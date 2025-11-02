@@ -5,12 +5,12 @@ import com.mrh0.createaddition.event.GameEvents;
 import com.mrh0.createaddition.index.CABlocks;
 import com.mrh0.createaddition.index.CAItemProperties;
 import com.mrh0.createaddition.index.CAPartials;
-import com.mrh0.createaddition.index.CAPonder;
+import com.mrh0.createaddition.ponder.CAPonderPlugin;
 import com.mrh0.createaddition.network.CANetwork;
+import net.createmod.ponder.foundation.PonderIndex;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 
 public class CreateAdditionClient implements ClientModInitializer {
@@ -18,8 +18,10 @@ public class CreateAdditionClient implements ClientModInitializer {
     public void onInitializeClient() {
         CANetwork.initClient();
         GameEvents.initClient();
-        CAPonder.register();
-        //CAEntities.registerRenderers();
+
+        // Registrar o plugin do Ponder
+        PonderIndex.addPlugin(new CAPonderPlugin());
+
         CAPartials.init();
         CAItemProperties.register();
 
@@ -27,6 +29,9 @@ public class CreateAdditionClient implements ClientModInitializer {
 
         RenderType cutout = RenderType.cutoutMipped();
 
-        BlockRenderLayerMap.INSTANCE.putBlocks(cutout, CABlocks.TESLA_COIL.get(), CABlocks.BARBED_WIRE.get(), CABlocks.SMALL_LIGHT_CONNECTOR.get());
+        BlockRenderLayerMap.INSTANCE.putBlocks(cutout,
+                CABlocks.TESLA_COIL.get(),
+                CABlocks.BARBED_WIRE.get(),
+                CABlocks.SMALL_LIGHT_CONNECTOR.get());
     }
 }

@@ -12,7 +12,7 @@ import com.mrh0.createaddition.network.ObservePacket;
 import com.mrh0.createaddition.recipe.charging.ChargingRecipe;
 import com.mrh0.createaddition.sound.CASoundScapes;
 import com.mrh0.createaddition.util.Util;
-import com.simibubi.create.content.equipment.goggles.IHaveGoggleInformation;
+import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.kinetics.belt.behaviour.BeltProcessingBehaviour;
 import com.simibubi.create.content.kinetics.belt.behaviour.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
@@ -279,7 +279,7 @@ public class TeslaCoilBlockEntity extends BaseElectricBlockEntity implements IHa
 	@Override
 	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
 		ObservePacket.send(worldPosition, 0);
-
+        String spacing = "  ";
 		tooltip.add(Component.literal(spacing)
 				.append(Component.translatable(CreateAddition.MODID + ".tooltip.tesla_coil.info").withStyle(ChatFormatting.WHITE)));
 
@@ -298,4 +298,9 @@ public class TeslaCoilBlockEntity extends BaseElectricBlockEntity implements IHa
 
 		return IHaveGoggleInformation.super.addToGoggleTooltip(tooltip, isPlayerSneaking);
 	}
+
+    @Override
+    public float getPercent() {
+        return 0;
+    }
 }

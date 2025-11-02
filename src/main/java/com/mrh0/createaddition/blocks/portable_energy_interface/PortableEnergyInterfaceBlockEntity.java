@@ -49,7 +49,12 @@ public class PortableEnergyInterfaceBlockEntity extends PortableStorageInterface
 //		return super.getCapability(cap, side);
 	}
 
-	// Implement protected methods.
+    @Override
+    public float getPercent() {
+        return 0;
+    }
+
+    // Implement protected methods.
 
 	public boolean isConnected() {
 		int timeUnit = this.getTransferTimeout();

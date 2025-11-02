@@ -18,7 +18,7 @@ import com.simibubi.create.content.kinetics.motor.KineticScrollValueBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.CenteredSideValueBoxTransform;
 import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ScrollValueBehaviour;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -55,7 +55,7 @@ public class ElectricMotorBlockEntity extends GeneratingKineticBlockEntity imple
 		CenteredSideValueBoxTransform slot =
 			new CenteredSideValueBoxTransform((motor, side) -> motor.getValue(ElectricMotorBlock.FACING) == side.getOpposite());
 
-		generatedSpeed = new KineticScrollValueBehaviour(Lang.translateDirect("generic.speed"), this, slot);
+		generatedSpeed = new KineticScrollValueBehaviour(CreateLang.translateDirect("generic.speed"), this, slot);
 		generatedSpeed.between(-Config.ELECTRIC_MOTOR_RPM_RANGE.get(), Config.ELECTRIC_MOTOR_RPM_RANGE.get());
 		generatedSpeed.value = 32;
 		//generatedSpeed.withUnit(i -> Lang.translateDirect("generic.unit.rpm"));
@@ -88,9 +88,10 @@ public class ElectricMotorBlockEntity extends GeneratingKineticBlockEntity imple
 	@Override
 	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
 		super.addToGoggleTooltip(tooltip, isPlayerSneaking);
+        String spacing = "  ";
 		tooltip.add(Component.literal(spacing).append(Component.translatable(CreateAddition.MODID + ".tooltip.energy.consumption").withStyle(ChatFormatting.GRAY)));
 		tooltip.add(Component.literal(spacing).append(Component.literal(" " + Util.format(getEnergyConsumptionRate(generatedSpeed.getValue())) + "fe/t ")
-				.withStyle(ChatFormatting.AQUA)).append(Lang.translateDirect("gui.goggles.at_current_speed").withStyle(ChatFormatting.DARK_GRAY)));
+				.withStyle(ChatFormatting.AQUA)).append(CreateLang.translateDirect("gui.goggles.at_current_speed").withStyle(ChatFormatting.DARK_GRAY)));
 		return true;
 	}
 
@@ -130,7 +131,12 @@ public class ElectricMotorBlockEntity extends GeneratingKineticBlockEntity imple
 //			Peripherals.isPeripheral(getLevel(), getBlockPos(), side);
 	}
 
-	public boolean isEnergyInput(Direction side) {
+    @Override
+    public float getPercent() {
+        return 0;
+    }
+
+    public boolean isEnergyInput(Direction side) {
 		return true;
 	}
 

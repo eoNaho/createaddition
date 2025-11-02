@@ -88,4 +88,9 @@ public class CreativeEnergyBlockEntity extends CrateBlockEntity implements Energ
 	public EnergyStorage getEnergyStorage(@Nullable Direction direction) {
 		return energy;
 	}
+
+    @Override
+    public float getPercent() {
+        return 0;
+    }
 }

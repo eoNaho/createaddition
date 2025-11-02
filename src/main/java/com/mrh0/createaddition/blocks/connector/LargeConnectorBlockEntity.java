@@ -63,4 +63,9 @@ public class LargeConnectorBlockEntity extends AbstractConnectorBlockEntity {
     public int getMaxWireLength() {
         return Config.LARGE_CONNECTOR_MAX_LENGTH.get();
     }
+
+    @Override
+    public float getPercent() {
+        return 0;
+    }
 }

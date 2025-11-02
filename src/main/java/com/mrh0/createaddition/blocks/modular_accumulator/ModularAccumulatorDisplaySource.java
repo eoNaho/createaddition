@@ -27,24 +27,24 @@ public class ModularAccumulatorDisplaySource extends PercentOrProgressBarDisplay
 	}
 
 	@Override
-	protected Float getProgress(DisplayLinkContext context) {
-		if (!(context.getSourceBlockEntity() instanceof ModularAccumulatorBlockEntity te)) return null;
-		te = te.getControllerBE();
-		if(te == null) return null;
+    protected Float getProgress(DisplayLinkContext context) {
+        if (!(context.getSourceBlockEntity() instanceof ModularAccumulatorBlockEntity te)) return null;
+        te = te.getControllerBE();
+        if(te == null) return null;
 
-		float capacity = te.energyStorage.getCapacity();
-		float stored = te.energyStorage.getAmount();
+        float capacity = te.energyStorage.getMaxEnergyStored();
+        float stored = te.energyStorage.getEnergyStored();
 
-		if (capacity == 0) return 0f;
+        if (capacity == 0) return 0f;
 
-		return switch (getMode(context)) {
-			case 0, 1 -> stored / capacity;
-			case 2 -> stored;
-			case 3 -> capacity;
-			case 4 -> capacity - stored;
-			default -> 0f;
-		};
-	}
+        return switch (getMode(context)) {
+            case 0, 1 -> stored / capacity;
+            case 2 -> stored;
+            case 3 -> capacity;
+            case 4 -> capacity - stored;
+            default -> 0f;
+        };
+    }
 
 	@Override
 	protected boolean allowsLabeling(DisplayLinkContext context) {

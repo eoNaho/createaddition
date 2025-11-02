@@ -6,13 +6,12 @@ import com.mrh0.createaddition.index.CABlocks;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.compat.emi.CreateEmiAnimations;
 import com.simibubi.create.foundation.gui.CustomLightingSettings;
-import com.simibubi.create.foundation.gui.ILightingSettings;
 import dev.emi.emi.api.widget.WidgetHolder;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.Direction;
 
 public class CAEmiAnimations {
-    public static final ILightingSettings DEFAULT_LIGHTING = CustomLightingSettings.builder()
+    public static final CustomLightingSettings DEFAULT_LIGHTING = CustomLightingSettings.builder()
             .firstLightRotation(12.5f, 45.0f)
             .secondLightRotation(-20.0f, 50.0f)
             .build();

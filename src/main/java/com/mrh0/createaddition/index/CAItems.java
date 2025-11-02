@@ -52,11 +52,9 @@ public class CAItems {
 
 	public static final ItemEntry<Item> ELECTRUM_SHEET =
 			CreateAddition.REGISTRATE.item("electrum_sheet", Item::new)
-					.tag(forgeItemTag("plates/electrum"), PLATES.tag)
 					.register();
 	public static final ItemEntry<Item> ZINC_SHEET =
 			CreateAddition.REGISTRATE.item("zinc_sheet", Item::new)
-					.tag(forgeItemTag("plates/zinc"), PLATES.tag)
 					.register();
 
 	public static final ItemEntry<Item> COPPER_WIRE =

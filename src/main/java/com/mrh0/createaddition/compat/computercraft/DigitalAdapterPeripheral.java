@@ -6,7 +6,7 @@ import com.simibubi.create.content.contraptions.elevator.ElevatorColumn;
 import com.simibubi.create.content.contraptions.elevator.ElevatorContactBlock;
 import com.simibubi.create.content.contraptions.elevator.ElevatorContraption;
 import com.simibubi.create.content.contraptions.elevator.ElevatorPulleyBlockEntity;
-import com.simibubi.create.foundation.utility.IntAttached;
+import net.createmod.catnip.data.IntAttached;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.lua.LuaFunction;

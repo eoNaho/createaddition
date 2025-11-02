@@ -2,7 +2,6 @@ package com.mrh0.createaddition.recipe.rolling;
 
 import com.mrh0.createaddition.compat.emi.EmiRollingMillAssemblySubCategory;
 import com.mrh0.createaddition.compat.jei.RollingMillAssemblySubCategory;
-import com.mrh0.createaddition.compat.rei.ReiRollingMillAssemblySubCategory;
 import com.mrh0.createaddition.index.CABlocks;
 import com.mrh0.createaddition.index.CARecipes;
 import com.simibubi.create.compat.recipeViewerCommon.SequencedAssemblySubCategoryType;
@@ -122,8 +121,9 @@ public class RollingRecipe extends ProcessingRecipe<RecipeWrapper> implements IA
     @Override
     public SequencedAssemblySubCategoryType getJEISubCategory() {
         return new SequencedAssemblySubCategoryType(
-                () -> RollingMillAssemblySubCategory::new,
-                () -> ReiRollingMillAssemblySubCategory::new,
-                () -> EmiRollingMillAssemblySubCategory::new);
+                () -> RollingMillAssemblySubCategory::new,  // JEI
+                () -> null,  // REI - provide null if not implemented
+                () -> null   // EMI - provide null if not implemented
+        );
     }
 }

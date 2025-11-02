@@ -2,8 +2,8 @@ package com.mrh0.createaddition.sound;
 
 
 import com.mrh0.createaddition.CreateAddition;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.VecHelper;
+import net.createmod.catnip.animation.AnimationTickHolder;
+import net.createmod.catnip.math.VecHelper;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.Sound;

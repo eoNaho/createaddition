@@ -30,7 +30,7 @@ import java.util.function.Function;
 public class CAArmInteractions {
     private static <T extends ArmInteractionPointType> T register(String id, Function<ResourceLocation, T> factory) {
         T type = factory.apply(CreateAddition.asResource(id));
-        ArmInteractionPointType.register(type);
+        ArmInteractionPointType.init();
         return type;
     }
 
@@ -38,7 +38,7 @@ public class CAArmInteractions {
 
     public static class LiquidBlazeBurnerType extends ArmInteractionPointType {
         public LiquidBlazeBurnerType(ResourceLocation id) {
-            super(id);
+            super();
         }
 
         @Override

@@ -106,4 +106,9 @@ public class SmallLightConnectorBlockEntity extends AbstractConnectorBlockEntity
                         .setValue(SmallLightConnectorBlock.POWERED, false));
         }
     }
+
+    @Override
+    public float getPercent() {
+        return 0;
+    }
 }

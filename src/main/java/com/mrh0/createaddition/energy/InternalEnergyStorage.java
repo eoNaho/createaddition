@@ -12,18 +12,23 @@ import net.minecraft.world.level.Level;
 import team.reborn.energy.api.EnergyStorage;
 
 public class InternalEnergyStorage extends SnapshotParticipant<Long> implements EnergyStorage {
-    public long amount = 0;
-    public long capacity;
+    protected long energy = 0; // Changed from 'amount' to 'energy' to match Forge
+    protected long capacity;
     public final long maxReceive, maxExtract;
-	public InternalEnergyStorage(long capacity) {
-        this(capacity, capacity, capacity);
+
+    public InternalEnergyStorage(long capacity) {
+        this(capacity, capacity, capacity, 0);
     }
 
     public InternalEnergyStorage(long capacity, long maxTransfer) {
-        this(capacity, maxTransfer, maxTransfer);
+        this(capacity, maxTransfer, maxTransfer, 0);
     }
 
     public InternalEnergyStorage(long capacity, long maxReceive, long maxExtract) {
+        this(capacity, maxReceive, maxExtract, 0);
+    }
+
+    public InternalEnergyStorage(long capacity, long maxReceive, long maxExtract, long energy) {
         StoragePreconditions.notNegative(capacity);
         StoragePreconditions.notNegative(maxReceive);
         StoragePreconditions.notNegative(maxExtract);
@@ -31,49 +36,88 @@ public class InternalEnergyStorage extends SnapshotParticipant<Long> implements 
         this.capacity = capacity;
         this.maxReceive = maxReceive;
         this.maxExtract = maxExtract;
-    }
-
-    public InternalEnergyStorage(long capacity, long maxReceive, long maxExtract, long energy) {
-        this(capacity, maxReceive, maxExtract);
-        this.amount = energy;
+        this.energy = energy;
     }
 
     @Override
     protected Long createSnapshot() {
-        return amount;
+        return energy;
     }
 
     @Override
     protected void readSnapshot(Long snapshot) {
-        amount = snapshot;
+        energy = snapshot;
     }
-    
+
     public CompoundTag write(CompoundTag nbt) {
-    	nbt.putLong("energy", amount);
-    	return nbt;
+        nbt.putLong("energy", energy);
+        return nbt;
     }
-    
+
     public void read(CompoundTag nbt) {
-    	setEnergy(nbt.getInt("energy"));
+        setEnergy(nbt.getLong("energy"));
     }
-    
+
     public CompoundTag write(CompoundTag nbt, String name) {
-    	nbt.putLong("energy_"+name, amount);
-    	return nbt;
+        nbt.putLong("energy_"+name, energy);
+        return nbt;
     }
-    
+
     public void read(CompoundTag nbt, String name) {
-    	setEnergy(nbt.getInt("energy_"+name));
+        setEnergy(nbt.getLong("energy_"+name));
     }
+
     public long getSpace() {
-    	return Math.max(getCapacity() - getAmount(), 0);
+        return Math.max(getMaxEnergyStored() - getEnergyStored(), 0);
     }
-    
+
+    // Forge-style methods
+    public boolean canExtract() {
+        return maxExtract > 0;
+    }
+
+    public boolean canReceive() {
+        return maxReceive > 0;
+    }
+
+    public int receiveEnergy(int maxReceive, boolean simulate) {
+        if (!canReceive()) return 0;
+
+        long received = Math.min(this.maxReceive, Math.min(maxReceive, capacity - energy));
+
+        if (!simulate && received > 0) {
+            energy += received;
+        }
+
+        return (int) received;
+    }
+
+    public int extractEnergy(int maxExtract, boolean simulate) {
+        if (!canExtract()) return 0;
+
+        long extracted = Math.min(this.maxExtract, Math.min(maxExtract, energy));
+
+        if (!simulate && extracted > 0) {
+            energy -= extracted;
+        }
+
+        return (int) extracted;
+    }
+
+    public int getEnergyStored() {
+        return (int) energy;
+    }
+
+    public int getMaxEnergyStored() {
+        return (int) capacity;
+    }
+
+    // Fabric API methods (kept for compatibility)
     @Override
     public boolean supportsExtraction() {
         return maxExtract > 0;
     }
-    
+
     @Override
     public boolean supportsInsertion() {
         return maxReceive > 0;
@@ -83,11 +127,11 @@ public class InternalEnergyStorage extends SnapshotParticipant<Long> implements 
     public long insert(long maxAmount, TransactionContext transaction) {
         StoragePreconditions.notNegative(maxAmount);
 
-        long inserted = Math.min(maxReceive, Math.min(maxAmount, capacity - amount));
+        long inserted = Math.min(maxReceive, Math.min(maxAmount, capacity - energy));
 
         if (inserted > 0) {
             updateSnapshots(transaction);
-            amount += inserted;
+            energy += inserted;
             return inserted;
         }
 
@@ -98,11 +142,11 @@ public class InternalEnergyStorage extends SnapshotParticipant<Long> implements 
     public long extract(long maxAmount, TransactionContext transaction) {
         StoragePreconditions.notNegative(maxAmount);
 
-        long extracted = Math.min(maxExtract, Math.min(maxAmount, amount));
+        long extracted = Math.min(maxExtract, Math.min(maxAmount, energy));
 
         if (extracted > 0) {
             updateSnapshots(transaction);
-            amount -= extracted;
+            energy -= extracted;
             return extracted;
         }
 
@@ -113,11 +157,11 @@ public class InternalEnergyStorage extends SnapshotParticipant<Long> implements 
         try (Transaction t = TransferUtil.getTransaction()) {
             StoragePreconditions.notNegative(maxAmount);
 
-            long extracted = Math.min(maxExtract, Math.min(maxAmount, amount));
+            long extracted = Math.min(maxExtract, Math.min(maxAmount, energy));
 
             if (extracted > 0) {
                 updateSnapshots(t);
-                amount -= extracted;
+                energy -= extracted;
                 return extracted;
             }
 
@@ -126,28 +170,28 @@ public class InternalEnergyStorage extends SnapshotParticipant<Long> implements 
     }
 
     public long internalConsumeEnergy(long consume) {
-        long oenergy = amount;
-        amount = Math.max(0, amount - consume);
-        return oenergy - amount;
+        long oenergy = energy;
+        energy = Math.max(0, energy - consume);
+        return oenergy - energy;
     }
 
     public long internalProduceEnergy(long produce) {
-        long oenergy = amount;
-        amount = Math.min(capacity, amount + produce);
-        return oenergy - amount;
+        long oenergy = energy;
+        energy = Math.min(capacity, energy + produce);
+        return energy - oenergy;
     }
-    
+
     public void setEnergy(long energy) {
-    	this.amount = energy;
+        this.energy = energy;
     }
 
     public void setCapacity(long capacity) {
-    	this.capacity = capacity;
+        this.capacity = capacity;
     }
 
     @Override
     public long getAmount() {
-        return amount;
+        return energy;
     }
 
     @Override
@@ -157,18 +201,17 @@ public class InternalEnergyStorage extends SnapshotParticipant<Long> implements 
 
     @Deprecated
     public void outputToSide(Level world, BlockPos pos, Direction side, int max) {
-		EnergyStorage ies = EnergyStorage.SIDED.find(world, pos.relative(side), side.getOpposite());
-		if(ies == null)
-			return;
+        EnergyStorage ies = EnergyStorage.SIDED.find(world, pos.relative(side), side.getOpposite());
+        if(ies == null) return;
         try(Transaction t = Transaction.openOuter()) {
             long ext = this.extract(max, t);
             this.insert(ext - ies.insert(ext, t), t);
             t.commit();
         }
     }
-    
+
     @Override
     public String toString() {
-    	return getAmount() + "/" + getCapacity() + " <-" + maxExtract + " ->" + maxReceive;
+        return getEnergyStored() + "/" + getMaxEnergyStored() + " <-" + maxExtract + " ->" + maxReceive;
     }
 }

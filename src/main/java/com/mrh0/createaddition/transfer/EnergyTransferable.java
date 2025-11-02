@@ -8,4 +8,6 @@ import javax.annotation.Nullable;
 public interface EnergyTransferable {
     @Nullable
     EnergyStorage getEnergyStorage(@Nullable Direction direction);
+
+    float getPercent();
 }

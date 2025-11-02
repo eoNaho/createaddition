@@ -13,7 +13,7 @@ import com.mrh0.createaddition.network.EnergyNetworkPacket;
 import com.mrh0.createaddition.network.IObserveTileEntity;
 import com.mrh0.createaddition.network.ObservePacket;
 import com.mrh0.createaddition.util.Util;
-import com.simibubi.create.content.equipment.goggles.IHaveGoggleInformation;
+import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import net.minecraft.ChatFormatting;
@@ -374,7 +374,7 @@ public class RedstoneRelayBlockEntity extends SmartBlockEntity implements IWireN
 		int node = getAvailableNode(ray.getLocation());
 
 		ObservePacket.send(worldPosition, node);
-
+        String spacing = "  ";
 		tooltip.add(Component.literal(spacing)
 				.append(Component.translatable(CreateAddition.MODID + ".tooltip.relay.info").withStyle(ChatFormatting.WHITE)));
 		tooltip.add(Component.literal(spacing)

@@ -1,20 +1,21 @@
 package com.mrh0.createaddition.blocks.portable_energy_interface;
 
-import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
+import com.mrh0.createaddition.index.CABlocks;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mrh0.createaddition.index.CAPartials;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
-import com.simibubi.create.content.contraptions.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
-import com.simibubi.create.foundation.render.CachedBufferer;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.animation.LerpedFloat;
+import dev.engine_room.flywheel.api.visualization.VisualizationManager;
+import net.createmod.catnip.render.CachedBuffers;
+import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
+import net.createmod.catnip.animation.AnimationTickHolder;
+import net.createmod.catnip.animation.LerpedFloat;
+import net.createmod.catnip.math.AngleHelper;
+import net.createmod.catnip.render.SuperByteBuffer;
+import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -28,58 +29,85 @@ import java.util.function.Consumer;
 
 public class PortableEnergyInterfaceRenderer extends SafeBlockEntityRenderer<PortableEnergyInterfaceBlockEntity> {
 
-	public PortableEnergyInterfaceRenderer(BlockEntityRendererProvider.Context context) {
-	}
+    public PortableEnergyInterfaceRenderer(BlockEntityRendererProvider.Context context) {
+    }
 
-	@Override
-	protected void renderSafe(PortableEnergyInterfaceBlockEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
-		if (Backend.canUseInstancing(te.getLevel())) return;
-		BlockState blockState = te.getBlockState();
-		float progress = te.getExtensionDistance(partialTicks);
-		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
-		render(blockState, te.isConnected(), progress, null, (sbb) -> sbb.light(light).renderInto(ms, vb));
-	}
+    @Override
+    protected void renderSafe(PortableEnergyInterfaceBlockEntity be, float partialTicks, PoseStack ms,
+                              MultiBufferSource buffer, int light, int overlay) {
+        if (VisualizationManager.supportsVisualization(be.getLevel()))
+            return;
 
-	public static void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld, ContraptionMatrices matrices, MultiBufferSource buffer) {
-		BlockState blockState = context.state;
-		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
-		float renderPartialTicks = AnimationTickHolder.getPartialTicks();
-		LerpedFloat animation = PortableEnergyInterfaceMovement.getAnimation(context);
-		float progress = animation.getValue(renderPartialTicks);
-		boolean lit = animation.settled();
-		render(blockState, lit, progress, matrices.getModel(), (sbb) -> sbb.light(matrices.getWorld(),
-				ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
-				.renderInto(matrices.getViewProjection(), vb));
-	}
+        BlockState blockState = be.getBlockState();
+        float progress = be.getExtensionDistance(partialTicks);
+        VertexConsumer vb = buffer.getBuffer(RenderType.solid());
+        render(blockState, be.isConnected(), progress, null, sbb -> sbb.light(light)
+                .renderInto(ms, vb));
+    }
 
-	private static void render(BlockState blockState, boolean lit, float progress, PoseStack local, Consumer<SuperByteBuffer> drawCallback) {
-		PartialModel middleForState = lit ? CAPartials.PORTABLE_ENERGY_INTERFACE_MIDDLE_POWERED : CAPartials.PORTABLE_ENERGY_INTERFACE_MIDDLE;
-		SuperByteBuffer middle = CachedBufferer.partial(middleForState, blockState);
-		SuperByteBuffer top = CachedBufferer.partial(CAPartials.PORTABLE_ENERGY_INTERFACE_TOP, blockState);
-		if (local != null) {
-			middle.transform(local);
-			top.transform(local);
-		}
+    public static void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
+                                           ContraptionMatrices matrices, MultiBufferSource buffer) {
+        BlockState blockState = context.state;
+        VertexConsumer vb = buffer.getBuffer(RenderType.solid());
+        float renderPartialTicks = AnimationTickHolder.getPartialTicks();
 
-		Direction facing = blockState.getValue(PortableEnergyInterfaceBlock.FACING);
-		rotateToFacing(middle, facing);
-		rotateToFacing(top, facing);
-		middle.translate(0.0D, progress * 0.5F + 0.375F, 0.0D);
-		top.translate(0.0D, progress, 0.0D);
-		drawCallback.accept(middle);
-		drawCallback.accept(top);
-	}
+        LerpedFloat animation = PortableEnergyInterfaceMovement.getAnimation(context);
+        float progress = animation.getValue(renderPartialTicks);
+        boolean lit = animation.settled();
+        render(blockState, lit, progress, matrices.getModel(),
+                sbb -> sbb.light(LevelRenderer.getLightColor(renderWorld, context.localPos))
+                        .useLevelLight(context.world, matrices.getWorld())
+                        .renderInto(matrices.getViewProjection(), vb));
+    }
 
-	private static void rotateToFacing(SuperByteBuffer buffer, Direction facing) {
-		buffer.centre().rotateY(AngleHelper.horizontalAngle(facing)).rotateX(facing == Direction.UP ? 0.0D : (facing == Direction.DOWN ? 180.0D : 90.0D)).unCentre();
-	}
+    private static void render(BlockState blockState, boolean lit, float progress, PoseStack local,
+                               Consumer<SuperByteBuffer> drawCallback) {
+        SuperByteBuffer middle = CachedBuffers.partial(getMiddleForState(blockState, lit), blockState);
+        SuperByteBuffer top = CachedBuffers.partial(getTopForState(blockState), blockState);
 
-	static PortableEnergyInterfaceBlockEntity getTargetPSI(MovementContext context) {
-		String _workingPos_ = "WorkingPos";
-		if (!context.data.contains(_workingPos_)) return null;
-		BlockPos pos = NbtUtils.readBlockPos(context.data.getCompound(_workingPos_));
-		BlockEntity tileEntity = context.world.getBlockEntity(pos);
-		if (tileEntity instanceof PortableEnergyInterfaceBlockEntity psi) return !psi.isTransferring() ? null : psi;
-		return null;
-	}
+        if (local != null) {
+            middle.transform(local);
+            top.transform(local);
+        }
+        Direction facing = blockState.getValue(PortableEnergyInterfaceBlock.FACING);
+        rotateToFacing(middle, facing);
+        rotateToFacing(top, facing);
+        middle.translate(0, progress * 0.5f + 0.375f, 0);
+        top.translate(0, progress, 0);
+
+        drawCallback.accept(middle);
+        drawCallback.accept(top);
+    }
+
+    private static void rotateToFacing(SuperByteBuffer buffer, Direction facing) {
+        buffer.center()
+                .rotateYDegrees(AngleHelper.horizontalAngle(facing))
+                .rotateXDegrees(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)
+                .uncenter();
+    }
+
+    static PortableEnergyInterfaceBlockEntity getTargetPSI(MovementContext context) {
+        String _workingPos_ = PortableEnergyInterfaceMovement._workingPos_;
+        if (!context.data.contains(_workingPos_))
+            return null;
+
+        BlockPos pos = NbtUtils.readBlockPos(context.data.getCompound(_workingPos_));
+        BlockEntity blockEntity = context.world.getBlockEntity(pos);
+        if (!(blockEntity instanceof PortableEnergyInterfaceBlockEntity psi))
+            return null;
+
+        if (!psi.isTransferring())
+            return null;
+        return psi;
+    }
+
+    static PartialModel getMiddleForState(BlockState state, boolean lit) {
+        CABlocks.PORTABLE_ENERGY_INTERFACE.has(state);
+        return lit ? CAPartials.PORTABLE_ENERGY_INTERFACE_MIDDLE_POWERED
+                : CAPartials.PORTABLE_ENERGY_INTERFACE_MIDDLE;
+    }
+
+    static PartialModel getTopForState(BlockState state) {
+        return CAPartials.PORTABLE_ENERGY_INTERFACE_TOP;
+    }
 }
