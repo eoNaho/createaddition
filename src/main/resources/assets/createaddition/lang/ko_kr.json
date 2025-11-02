@@ -91,7 +91,7 @@
 	"item.createaddition.electrum_amulet": "호박금 애뮬럿",
 	"item.createaddition.electrum_amulet.tooltip": "호박금 애뮬럿",
 	"item.createaddition.electrum_amulet.tooltip.summary": "_인생_이 당신을 지치게 할 때, 이 _애뮬럿_을 주머니에 쥐고 있으면 당신의 _행운_이 곧 바뀔 것 같은 느낌을 받게 될 것입니다.",
-
+	
 	"item.createaddition.seed_oil_bucket": "종자유 양동이",
 	"item.createaddition.seed_oil_bucket.tooltip": "종자유 양동이",
 	"item.createaddition.seed_oil_bucket.tooltip.summary": "간단한 _인화성 액체_입니다.",
@@ -199,7 +199,7 @@
 	"block.createaddition.honey_cake": "꿀 케이크",
 
 	"block.createaddition.biomass_pellet_block": "바이오매스 파렛트",
-
+	
 	"block.createaddition.seed_oil": "종자유",
 	"block.createaddition.bioethanol": "바이오에탄올",
 	
@@ -211,7 +211,7 @@
 
 	"block.createaddition.liquid_blaze_burner": "빨대를 문 블레이즈 버너",
 	
-	"itemGroup.createaddition.main":"Create Crafts & Additions",
+	"itemGroup.createaddition:main":"Create Crafts & Additions",
 	
 	"createaddition.ponder.tag.electric": "전기 기구",
 	"createaddition.ponder.tag.electric.description": "전기를 사용하는 장치입니다.",

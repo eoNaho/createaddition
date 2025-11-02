@@ -1,4 +1,3 @@
-import json
 import os
 
 dir = os.path.dirname(__file__)
@@ -27,7 +26,6 @@ with open(dir + "/../" + truth, 'r', encoding="utf8") as truthFile:
                 if key in langJson:
                     print("Key: " + key + " not in lang")
                     newLang[key] = langJson[key]
-                    
+
         with open(dir + "/../" + lang, 'w', encoding="utf8") as currentFile:
             currentFile.write(json.dumps(newLang, ensure_ascii=False, indent="\t"))
-
